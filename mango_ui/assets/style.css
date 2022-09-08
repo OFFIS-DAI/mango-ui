@@ -36,6 +36,12 @@ body {
     width: 100%;
 }
 
+.content-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .nav {
     float: right;
     margin-right: 40px;

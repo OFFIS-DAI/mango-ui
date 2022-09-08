@@ -1,6 +1,6 @@
 from dash import dcc
 from dash import html
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output, ALL
 from dash import callback_context
 
 import dash

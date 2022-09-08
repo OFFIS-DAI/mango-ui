@@ -1,9 +1,11 @@
 from dash import dcc
 from dash import html
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output, State, ALL, MATCH
 from dash import callback_context
+import dash
 
 import dash_cytoscape as cyto
+import mango_ui.example_agents as example_agents
 
 
 def create_default_style(app):
@@ -182,13 +184,48 @@ def create_agent_view_layout(nodeData):
                     ),
                 ],
                 className="header-flex",
-            )
+            ),
+            dcc.Dropdown(
+                [str(acls) for acls in example_agents.ALL_AGENTS],
+                str(example_agents.ALL_AGENTS[0]),
+                id={"type": "choose-agent-cls", "instance": nodeData["id"]},
+            ),
+            html.Div(
+                [],
+                id={"type": "param-agent-content", "instance": nodeData["id"]},
+                className="content-column",
+            ),
         ],
         className="mui-panel full-width overlay-centered border-box-style",
     )
 
 
 def create_page_callbacks(app):
+    @app.callback(
+        Output({"type": "param-agent-content", "instance": MATCH}, "children"),
+        Input({"type": "choose-agent-cls", "instance": MATCH}, "value"),
+        State({"type": "choose-agent-cls", "instance": MATCH}, "id"),
+    )
+    def choose_agent_cls(new_value, id):
+        if new_value:
+            actual_agent = None
+            for agent in example_agents.ALL_AGENTS:
+                if str(agent) == new_value:
+                    actual_agent = agent
+            parameters_for_agent = actual_agent.__ui_parameters__
+            inputs = [
+                html.Div(
+                    [
+                        dcc.Input(id=f"{id}#{param_name}", type="text"),
+                        html.Label(f"{param_name} ({str(desc[0])})"),
+                    ],
+                    className="mui-textfield mui-textfield--float-label full-width",
+                )
+                for param_name, desc in parameters_for_agent.items()
+            ]
+            return inputs
+        return dash.no_update
+
     @app.callback(
         Output("cytoscape-agent-view-central", "elements"),
         Output("agent-id-counter", "data"),
