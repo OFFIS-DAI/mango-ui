@@ -24,7 +24,6 @@ def ui_class(cls=None):
             if isinstance(obj, _UIProperty):
                 cls.__add_ui_parameter__(obj.p_name, obj.p_type, obj.p_presets)
 
-        print(cls.__ui_parameters__)
         return cls
 
     if cls is None:
