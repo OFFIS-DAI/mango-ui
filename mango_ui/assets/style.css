@@ -193,3 +193,10 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid var(--border-color-lighter);
 }
+
+.primary-action-button {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    font-size: 18px;
+}
